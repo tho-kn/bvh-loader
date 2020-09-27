@@ -10,6 +10,7 @@
 
 BVHReader *bvh;
 int frame = 0;
+double accel = 10.0;
 
 unsigned timeStep = 30;
 bool play = false;
@@ -29,15 +30,15 @@ bool leftButton = false;
 GLfloat mousePosX, mousePosY;
 
 /* vectors that makes the rotation and translation of the cube */
-float eye[3] = { -300.0f, 300.0f, -300.0f };
-float ori[3] = { 300.0f, -300.0f, 300.0f };
-float oriAngle[2] = { 0.0f * PI/180, 0.0f * PI/180 };
-float rot[3] = { 0.0f, 1.0f, 0.0f };
+Eigen::Vector3f eye(-300.0f, 200.0f, -300.0f);
+Eigen::Vector3f ori(1.0f, 0.0f, 1.0f);
+Eigen::Vector2f oriAngle(3.0 * PI / 4.0, PI / 2.0);
+Eigen::Vector3f rot(0.0f, 1.0f, 0.0f);
 
 void loadGlobalCoord()
 {
 	glLoadIdentity();
-	gluLookAt(eye[0], eye[1], eye[2], eye[0]+ori[0], eye[1]+ori[1], eye[2]+ori[2], eye[0]+rot[0], eye[1]+rot[1], eye[2]+rot[2]);
+	gluLookAt(eye[0], eye[1], eye[2], eye[0]+ori[0], eye[1]+ori[1], eye[2]+ori[2], rot[0], rot[1], rot[2]);
 	glMultMatrixd(rotMatrix);
 }
 
@@ -54,6 +55,15 @@ void glutMotion(int x, int y)
 		mousePosX = x;
 		mousePosY = y;
 
+		oriAngle[0] += dx / width;
+		oriAngle[1] -= dy / width;
+
+		ori[0] = sin(oriAngle[0])*sin(oriAngle[1]);
+		ori[1] = -cos(oriAngle[1]);
+		ori[2] = -cos(oriAngle[0])*sin(oriAngle[1]);
+
+		ori.normalize();
+		
 		loadGlobalCoord();
 	}
 	return;
@@ -130,9 +140,9 @@ void resize(int w, int h) {
 void keyboard(unsigned char key, int x, int y) {
 	switch (key) {
 	case 'w':
-		eye[0] += ori[0] * 0.1;
-		eye[1] += ori[1] * 0.1;
-		eye[2] += ori[2] * 0.1;
+		eye[0] += ori[0] * accel;
+		eye[1] += ori[1] * accel;
+		eye[2] += ori[2] * accel;
 		break;
 	case 'a':
 		if(!play){
@@ -142,9 +152,9 @@ void keyboard(unsigned char key, int x, int y) {
 		}
 		break;
 	case 's':
-		eye[0] -= ori[0] * 0.1;
-		eye[1] -= ori[1] * 0.1;
-		eye[2] -= ori[2] * 0.1;
+		eye[0] -= ori[0] * accel;
+		eye[1] -= ori[1] * accel;
+		eye[2] -= ori[2] * accel;
 		break;
 	case 'd':
 		if(!play){
