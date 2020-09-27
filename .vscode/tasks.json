@@ -1,0 +1,32 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "shell",
+			"label": "C/C++: g++ build active file",
+			"command": "/usr/bin/g++",
+			"args": [
+				// "${file}",
+				// "${fileDirname}/${fileBasenameNoExtension}",
+				"-g",
+				"${workspaceFolder}/main.cpp",
+				"${workspaceFolder}/GlHelper/DrawHelper.cpp",
+				"${workspaceFolder}/Segment.cpp",
+				"${workspaceFolder}/BVHReader.cpp",
+				"-o",
+				"${workspaceFolder}/BVH_Loader",
+				"-lglut",
+				"-lGL",
+				"-lGLU",
+				"-lGLEW",
+			],
+			"options": {
+				"cwd": "${workspaceFolder}"
+			},
+			"problemMatcher": [
+				"$gcc"
+			],
+			"group": "build"
+		}
+	]
+}
