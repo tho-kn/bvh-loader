@@ -1,8 +1,8 @@
-# bvh-loader
-## requirements
-requirements: Eigen3 , Freeglut
+# BVH-Loader
+## Requirements
+Eigen3 , Freeglut
 
-## control
+## Control
 * w, s: move forward and backward
 * left click + mouse move : rotate camera
 * right click : play / pause
