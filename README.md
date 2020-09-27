@@ -3,6 +3,7 @@
 Eigen3 , Freeglut
 
 ## Control
-* w, s: move forward and backward
+* w, a, s, d : move
+* q, e : increment / decrement current frame
 * left click + mouse move : rotate camera
 * right click : play / pause

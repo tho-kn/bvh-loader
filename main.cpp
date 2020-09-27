@@ -33,12 +33,13 @@ GLfloat mousePosX, mousePosY;
 Eigen::Vector3f eye(-300.0f, 200.0f, -300.0f);
 Eigen::Vector3f ori(1.0f, 0.0f, 1.0f);
 Eigen::Vector2f oriAngle(3.0 * PI / 4.0, PI / 2.0);
-Eigen::Vector3f rot(0.0f, 1.0f, 0.0f);
+Eigen::Vector3f right(0.0f, 0.0f, 1.0f);
+Eigen::Vector3f up(0.0f, 1.0f, 0.0f);
 
 void loadGlobalCoord()
 {
 	glLoadIdentity();
-	gluLookAt(eye[0], eye[1], eye[2], eye[0]+ori[0], eye[1]+ori[1], eye[2]+ori[2], rot[0], rot[1], rot[2]);
+	gluLookAt(eye[0], eye[1], eye[2], eye[0]+ori[0], eye[1]+ori[1], eye[2]+ori[2], up[0], up[1], up[2]);
 	glMultMatrixd(rotMatrix);
 }
 
@@ -63,6 +64,7 @@ void glutMotion(int x, int y)
 		ori[2] = -cos(oriAngle[0])*sin(oriAngle[1]);
 
 		ori.normalize();
+		right = ori.cross(up).normalized();
 		
 		loadGlobalCoord();
 	}
@@ -140,23 +142,25 @@ void resize(int w, int h) {
 void keyboard(unsigned char key, int x, int y) {
 	switch (key) {
 	case 'w':
-		eye[0] += ori[0] * accel;
-		eye[1] += ori[1] * accel;
-		eye[2] += ori[2] * accel;
+		eye += ori * accel;
+		break;
+	case 's':
+		eye -= ori * accel;
 		break;
 	case 'a':
+		eye -= right * accel;
+		break;
+	case 'd':
+		eye += right * accel;
+		break;
+	case 'q':
 		if(!play){
 			frame -= 1;
 			if(frame < 0) frame = bvh->frameSize() - 1;
 			bvh->loadFrame(frame);
 		}
 		break;
-	case 's':
-		eye[0] -= ori[0] * accel;
-		eye[1] -= ori[1] * accel;
-		eye[2] -= ori[2] * accel;
-		break;
-	case 'd':
+	case 'e':
 		if(!play){
 			frame += 1;
 			if(frame >= bvh->frameSize()) frame = 0;
