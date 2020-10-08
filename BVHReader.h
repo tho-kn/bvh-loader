@@ -13,6 +13,7 @@ public:
 	void draw();
     int frameSize();
     double getFrameTime();
+    Segment *getRoot();
 
 private:
     std::string filename;

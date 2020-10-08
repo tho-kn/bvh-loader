@@ -23,11 +23,15 @@ public:
 	std::string getName();
 
 	void setColor(const Eigen::Vector3d& color);
+	
+	Eigen::Vector3d getOffset();
 	void setOffset(const Eigen::Vector3d& offset);
 	void rename(const std::string name);
 
 	void translate(const Eigen::Vector3d& trans);
 	void rotate(const Eigen::Vector3d& rot);
+	Eigen::Vector3d getTrans();
+	Eigen::Vector3d getRot();
 
 	void addChannel(const Channel ch);
 	void applyChannel(const double val, const int num);

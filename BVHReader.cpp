@@ -1,6 +1,5 @@
 #include "BVHReader.h"
 #include <stack>
-#include <queue>
 
 using namespace std;
 
@@ -26,6 +25,10 @@ static vector<string> split(string str, char delimiter) {
     }
  
     return vals;
+}
+
+Segment *BVHReader::getRoot(){
+    return root[0].get();
 }
 
 static vector<double> splitDouble(string str, char delimiter) {
@@ -121,14 +124,14 @@ bool BVHReader::loadHierarchy(){
 
         if(words[0] == "ROOT") {
             if(stack.size() > 0) return false;
-            curr = std::make_unique<Segment>(words[1]);
+            curr = std::make_unique<Segment>(buffer);
             curr->setColor(Eigen::Vector3d(1, 1, 0));
             newSeg = true;
         }
         else if(words[0] == "JOINT") {
             if(curr == NULL) return false;
             stack.push(std::move(curr));
-            curr = std::make_unique<Segment>(words[1]);
+            curr = std::make_unique<Segment>(buffer);
             newSeg = true;
         }
         else if(words[0] == "End") {

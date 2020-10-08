@@ -9,12 +9,19 @@
 Segment::Segment(const std::string name = ""):
 	offset(Eigen::Vector3d(0, 0, 0)),trans(Eigen::Vector3d(0, 0, 0)), rot(Eigen::Vector3d(0, 0, 0)), color(Eigen::Vector3d(1, 0, 0)), name(name) {}
 
+Eigen::Vector3d Segment::getOffset(){
+	return this->offset;
+}
+
 void Segment::setOffset(const Eigen::Vector3d& offset){
 	this->offset = offset;
 }
 
 void Segment::translate(const Eigen::Vector3d& trans){
 	this->trans = trans;
+}
+Eigen::Vector3d Segment::getTrans(){
+	return this->trans;
 }
 
 void Segment::translateX(const double val) { this->trans[0] = val; }
@@ -23,6 +30,9 @@ void Segment::translateZ(const double val) { this->trans[2] = val; }
 
 void Segment::rotate(const Eigen::Vector3d& rot){
 	this->rot = rot;
+}
+Eigen::Vector3d Segment::getRot(){
+	return this->rot;
 }
 
 void Segment::rotateX(const double val) { this->rot[0] = val; }
