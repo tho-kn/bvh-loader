@@ -76,11 +76,9 @@ void Segment::draw() {
 		//DrawThickLine(0.0, 0.0, 0.0, this->offset[0], this->offset[1], this->offset[2], 1);
 		glPushMatrix();
 		{
-			for(int i = 0; i < 4; i++){
-				glColor3d(1.0, 1.0, 1.0);
-				glEigenTranslated(this->offset / 5.0);
-				glutSolidSphere(1, 4, 4);
-			}
+			Eigen::Vector3d avg = (this->offset.normalized() + Eigen::Vector3d(0, 0, 1));
+			glRotated(180.0, avg[0], avg[1], avg[2]);
+			DrawBox(-1, -1, 0, 1, 1, this->offset.norm());
 		}
 		glPopMatrix();
 

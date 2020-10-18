@@ -106,6 +106,22 @@ void DrawBox(double x1, double y1, double z1, double x2, double y2, double z2, f
 	glVertex3d(x1, y2, z2);
 	glEnd();
 
+	glBegin(GL_LINE_STRIP);
+	glColor3f(0, 0, 0);
+	glVertex3d(x1, y1, z1);
+	glVertex3d(x1, y1, z2);
+	glVertex3d(x1, y2, z2);
+	glVertex3d(x1, y2, z1);
+	glEnd();
+
+	glBegin(GL_LINE_STRIP);
+	glColor3f(0, 0, 0);
+	glVertex3d(x2, y1, z1);
+	glVertex3d(x2, y1, z2);
+	glVertex3d(x2, y2, z2);
+	glVertex3d(x2, y2, z1);
+	glEnd();
+
 	glPopMatrix();
 }
 
