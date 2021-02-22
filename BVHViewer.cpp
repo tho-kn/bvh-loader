@@ -3,11 +3,8 @@
 
 using namespace std;
 
-BVHViewer::BVHViewer(std::vector<std::unique_ptr<Segment>>* roots, Motion motion, int channels):
-    motion(motion), channels(channels){
-    move(roots->begin(), roots->end(), back_inserter(root));
-    roots->erase(roots->begin(), roots->end());
-}
+BVHViewer::BVHViewer(std::vector<std::unique_ptr<Segment>> roots, Motion motion, int channels):
+    root(move(roots)), motion(motion), channels(channels){}
 
 void BVHViewer::loadFrame(int frame){
     if(frame >= this->frameSize()){

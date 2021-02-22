@@ -204,7 +204,7 @@ int main(int argc, char** argv) {
 
 		timeStep = reader.getFrameTime() * 1000;
 		std::cout << "Loaded " << argv[1] << " successfully" << std::endl;
-		bvh = new BVHViewer(reader.getRoots(), reader.getMotion(), reader.getChannels());
+		bvh = new BVHViewer(move(reader.getRoots()), reader.getMotion(), reader.getChannels());
 	}
 
 	glutInit(&argc, argv);

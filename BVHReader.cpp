@@ -201,8 +201,8 @@ bool BVHReader::loadMotion(){
     return true;
 }
 
-vector<unique_ptr<Segment>>* BVHReader::getRoots(){
-    return &(this->root);
+vector<unique_ptr<Segment>> BVHReader::getRoots(){
+    return move(this->root);
 }
 
 int BVHReader::getChannels(){

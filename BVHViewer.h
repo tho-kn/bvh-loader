@@ -2,7 +2,7 @@
 
 class BVHViewer {
 public:
-	BVHViewer(std::vector<std::unique_ptr<Segment>>* roots, Motion motion, int channels);
+	BVHViewer(std::vector<std::unique_ptr<Segment>> roots, Motion motion, int channels);
 
     void loadFrame(int frame);
 

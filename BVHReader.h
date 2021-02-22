@@ -10,7 +10,7 @@ public:
 	BVHReader(string filename);
 
     bool loadFile();
-    vector<unique_ptr<Segment>>* getRoots();
+    vector<unique_ptr<Segment>> getRoots();
     Motion getMotion();
 
     int getChannels();
