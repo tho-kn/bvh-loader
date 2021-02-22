@@ -2,27 +2,30 @@
 #include <fstream>
 #include <string>
 
+using namespace std;
+typedef vector<vector<double>> Motion;
+
 class BVHReader {
 public:
-	BVHReader(std::string filename);
+	BVHReader(string filename);
 
     bool loadFile();
-    void loadFrame(int frame);
-    void applyMotion(std::vector<double> motion);
+    vector<unique_ptr<Segment>>* getRoots();
+    Motion getMotion();
 
-	void draw();
+    int getChannels();
     int frameSize();
     double getFrameTime();
-    Segment *getRoot();
+
+    bool loaded();
 
 private:
-    std::string filename;
-    std::ifstream iFile;
+    string filename;
+    ifstream iFile;
 
     bool isLoaded;
-    std::vector<std::unique_ptr<Segment>> root;
-
-    std::vector<std::vector<double>> motion;
+    vector<unique_ptr<Segment>> root;
+    Motion motion;
 
     bool loadHierarchy();
     bool loadMotion();

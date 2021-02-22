@@ -13,6 +13,7 @@
 				"${workspaceFolder}/GlHelper/DrawHelper.cpp",
 				"${workspaceFolder}/Segment.cpp",
 				"${workspaceFolder}/BVHReader.cpp",
+				"${workspaceFolder}/BVHViewer.cpp",
 				"-o",
 				"${workspaceFolder}/BVH_Loader",
 				"-lglut",

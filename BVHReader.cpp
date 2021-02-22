@@ -32,10 +32,6 @@ static vector<string> split(string str, char delimiter) {
     return vals;
 }
 
-Segment *BVHReader::getRoot(){
-    return root[0].get();
-}
-
 static vector<double> splitDouble(string str, char delimiter) {
     vector<double> vals;
     stringstream stream(str);
@@ -73,41 +69,6 @@ bool BVHReader::loadFile(){
 
     this->isLoaded = true;
     return true;
-}
-
-void BVHReader::loadFrame(int frame){
-    if(!this->isLoaded) {
-        std::cout << "BVH file is not loaded." << std::endl;
-        return;
-    }
-    if(frame >= this->frameSize()){
-        std::cout << "Frame size out of range." << std::endl;
-        return;
-    }
-
-    std::vector<double> data = this->motion[frame];
-    int dataPtr = 0;
-
-    std::stack<Segment *> segQ;
-    for(auto iter = this->root.begin(); iter < this->root.end(); iter++){
-        segQ.push((*iter).get());
-    }
-
-    while(segQ.size() > 0){
-        Segment *curr = segQ.top();
-        segQ.pop();
-
-        int channels = curr->numChannels();
-        for(int i = 0; i < channels; i++){
-            curr->applyChannel(data[dataPtr], i);
-            dataPtr++;
-        }
-
-        int segs = curr->numSub();
-        for(int i = segs - 1; i >= 0; i--){
-            segQ.push(curr->getSeg(i));
-        }
-    }
 }
 
 bool BVHReader::loadHierarchy(){
@@ -240,13 +201,16 @@ bool BVHReader::loadMotion(){
     return true;
 }
 
-void BVHReader::draw(){
-    if(!this->isLoaded) return;
+vector<unique_ptr<Segment>>* BVHReader::getRoots(){
+    return &(this->root);
+}
 
-    auto iter = this->root.begin();
-    for(; iter != this->root.end(); ++iter){
-        (*iter)->draw();
-    }
+int BVHReader::getChannels(){
+    return this->channels;
+}
+
+Motion BVHReader::getMotion(){
+    return this->motion;
 }
 
 int BVHReader::frameSize(){
@@ -255,4 +219,8 @@ int BVHReader::frameSize(){
 
 double BVHReader::getFrameTime(){
     return this->frameTime;
+}
+
+bool BVHReader::loaded(){
+    return this->isLoaded;
 }

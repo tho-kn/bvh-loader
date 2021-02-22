@@ -5,10 +5,10 @@
 #include <cmath>
 #include <algorithm>
 #include "GlHelper/DrawHelper.h"
-#include "BVHReader.h"
+#include "BVHViewer.h"
 #define PI 3.14159265
 
-BVHReader *bvh;
+BVHViewer *bvh;
 int frame = 0;
 double accel = 10.0;
 
@@ -33,7 +33,7 @@ GLfloat mousePosX, mousePosY;
 Eigen::Vector3f eye(-300.0f, 200.0f, -300.0f);
 Eigen::Vector3f ori(1.0f, 0.0f, 1.0f);
 Eigen::Vector2f oriAngle(3.0 * PI / 4.0, PI / 2.0);
-Eigen::Vector3f right(0.0f, 0.0f, 1.0f);
+Eigen::Vector3f rightVec(0.0f, 0.0f, 1.0f);
 Eigen::Vector3f up(0.0f, 1.0f, 0.0f);
 
 void loadGlobalCoord()
@@ -64,7 +64,7 @@ void glutMotion(int x, int y)
 		ori[2] = -cos(oriAngle[0])*sin(oriAngle[1]);
 
 		ori.normalize();
-		right = ori.cross(up).normalized();
+		rightVec = ori.cross(up).normalized();
 		
 		loadGlobalCoord();
 	}
@@ -148,10 +148,10 @@ void keyboard(unsigned char key, int x, int y) {
 		eye -= ori * accel;
 		break;
 	case 'a':
-		eye -= right * accel;
+		eye -= rightVec * accel;
 		break;
 	case 'd':
-		eye += right * accel;
+		eye += rightVec * accel;
 		break;
 	case 'q':
 		if(!play){
@@ -190,21 +190,22 @@ void Timer(int unused)
 }
 
 int main(int argc, char** argv) {
-
-	/* Can be enhanced to have UI to choose file */
 	if (argc < 2){
 		printf("Usage: %s Filename", argv[0]);
 		return 0;
 	}
 
-	bvh = new BVHReader(argv[1]);
-	if (!bvh->loadFile()){
-		std::cout << "Failed to load .bvh file" << std::endl;
-		return 1;
-	}
+	{
+		BVHReader reader = BVHReader(argv[1]);
+		if (!reader.loadFile()){
+			std::cout << "Failed to load .bvh file" << std::endl;
+			return 1;
+		}
 
-	timeStep = bvh->getFrameTime() * 1000;
-	std::cout << "Loaded " << argv[1] << " successfully" << std::endl;
+		timeStep = reader.getFrameTime() * 1000;
+		std::cout << "Loaded " << argv[1] << " successfully" << std::endl;
+		bvh = new BVHViewer(reader.getRoots(), reader.getMotion(), reader.getChannels());
+	}
 
 	glutInit(&argc, argv);
 
