@@ -14,6 +14,11 @@ static inline void trim(std::string& s) {
     }).base(), s.end());
 }
 
+static void getlineAndTrim(std::ifstream& iFile, std::string& s) {
+    getline(iFile, s);
+    trim(s);
+}
+
 static vector<string> split(string str, char delimiter) {
     vector<string> vals;
     stringstream stream(str);
@@ -53,8 +58,7 @@ bool BVHReader::loadFile(){
     if (this->iFile.fail()) return false;
 
     while (this->iFile.peek() != EOF){
-        getline(this->iFile, buffer);
-        trim(buffer);
+        getlineAndTrim(this->iFile, buffer);
 
         if (buffer == "HIERARCHY") this->loadHierarchy();
         if (buffer == "MOTION"){
@@ -118,8 +122,7 @@ bool BVHReader::loadHierarchy(){
     bool newSeg = false;
 
     while (this->iFile.peek() != EOF){
-        getline(this->iFile, buffer);
-        trim(buffer);
+        getlineAndTrim(this->iFile, buffer);
         vector<string> words = split(buffer, ' ');
 
         if(words[0] == "ROOT") {
@@ -208,12 +211,12 @@ bool BVHReader::loadMotion(){
     string buffer;
 
     try {
-        getline(this->iFile, buffer);
+        getlineAndTrim(this->iFile, buffer);
         std::vector<string> words = split(buffer, ' ');
         if(words.size() < 2) return false;
         this->frames = stoi(words[1]);
 
-        getline(this->iFile, buffer);
+        getlineAndTrim(this->iFile, buffer);
         words = split(buffer, ' ');
         if(words.size() < 3) return false;
         this->frameTime = stod(words[2]);
@@ -224,8 +227,7 @@ bool BVHReader::loadMotion(){
 
     while (this->iFile.peek() != EOF){
         try {
-            getline(this->iFile, buffer);
-            trim(buffer);
+            getlineAndTrim(this->iFile, buffer);
             std::vector<double> vals = splitDouble(buffer, ' ');
             if (vals.size() != this->channels) return false;
             this->motion.push_back(vals);
