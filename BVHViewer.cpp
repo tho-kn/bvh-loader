@@ -8,8 +8,7 @@ BVHViewer::BVHViewer(std::vector<std::unique_ptr<Segment>> roots, Motion motion,
 
 void BVHViewer::loadFrame(int frame){
     if(frame >= this->frameSize()){
-        cout << "Frame size out of range." << endl;
-        return;
+        frame %= this->frameSize();
     }
 
     vector<double> data = this->motion[frame];

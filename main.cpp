@@ -8,8 +8,9 @@
 #include "BVHViewer.h"
 #define PI 3.14159265
 
-BVHViewer *bvh;
+vector<BVHViewer*> bvhs;
 int frame = 0;
+int frame_size = 0;
 double accel = 10.0;
 
 unsigned timeStep = 30;
@@ -121,7 +122,8 @@ void display() {
 	//glRotatef(45, -1, 0, 0);
 	glPushMatrix();
 	DrawGridPlane();
-	bvh->draw();
+	for (auto bvh: bvhs)
+		bvh->draw();
 	
 	glPopMatrix();
 
@@ -156,19 +158,22 @@ void keyboard(unsigned char key, int x, int y) {
 	case 'q':
 		if(!play){
 			frame -= 1;
-			if(frame < 0) frame = bvh->frameSize() - 1;
-			bvh->loadFrame(frame);
+			if(frame < 0) frame = frame_size - 1;
+			for (auto bvh: bvhs)
+				bvh->loadFrame(frame);
 		}
 		break;
 	case 'e':
 		if(!play){
 			frame += 1;
-			if(frame >= bvh->frameSize()) frame = 0;
-			bvh->loadFrame(frame);
+			if(frame >= frame_size) frame = 0;
+			for (auto bvh: bvhs)
+				bvh->loadFrame(frame);
 		}
 		break;
 	case 27:
-		free(bvh);
+		for (auto bvh: bvhs)
+			free(bvh);
 		exit(0);
 		break;
 	default:
@@ -180,8 +185,9 @@ void Timer(int unused)
 {
 	if (play){
 		frame += 1;
-		if(frame >= bvh->frameSize()) frame = 0;
-		bvh->loadFrame(frame);
+		if(frame >= frame_size) frame = 0;
+		for (auto bvh: bvhs)
+			bvh->loadFrame(frame);
 	}
 
 	/* call the display callback and forces the current window to be displayed */
@@ -195,16 +201,19 @@ int main(int argc, char** argv) {
 		return 0;
 	}
 
-	{
-		BVHReader reader = BVHReader(argv[1]);
+	for (int i = 1; i < argc; i++){
+		BVHReader reader = BVHReader(argv[i]);
 		if (!reader.loadFile()){
 			std::cout << "Failed to load .bvh file" << std::endl;
 			return 1;
 		}
 
 		timeStep = reader.getFrameTime() * 1000;
-		std::cout << "Loaded " << argv[1] << " successfully" << std::endl;
-		bvh = new BVHViewer(move(reader.getRoots()), reader.getMotion(), reader.getChannels());
+		std::cout << "Loaded " << argv[i] << " successfully" << std::endl;
+		auto bvh = new BVHViewer(move(reader.getRoots()), reader.getMotion(), reader.getChannels());
+		bvhs.push_back(bvh);
+
+		if (bvh->frameSize() > frame_size) frame_size = bvh->frameSize();
 	}
 
 	glutInit(&argc, argv);
