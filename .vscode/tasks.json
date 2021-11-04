@@ -20,6 +20,9 @@
 				"-lGL",
 				"-lGLU",
 				"-lGLEW",
+				"-O2",
+				"-s",
+				"-DNDEBUG"
 			],
 			"options": {
 				"cwd": "${workspaceFolder}"
