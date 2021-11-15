@@ -76,9 +76,9 @@ void Segment::draw() {
 		//DrawThickLine(0.0, 0.0, 0.0, this->offset[0], this->offset[1], this->offset[2], 1);
 		glPushMatrix();
 		{
-			Eigen::Vector3d avg = (this->offset.normalized() + Eigen::Vector3d(0, 0, 1));
+			Eigen::Vector3d avg = (trans.norm() > 0.01 ? this->trans.normalized() : this->offset.normalized()) + Eigen::Vector3d(0, 0, 1);
 			glRotated(180.0, avg[0], avg[1], avg[2]);
-			DrawBox(-1, -1, 0, 1, 1, this->offset.norm());
+			DrawBox(-1, -1, 0, 1, 1, (trans.norm() > 0.01 ? this->trans.norm() : this->offset.norm()));
 		}
 		glPopMatrix();
 
@@ -88,8 +88,9 @@ void Segment::draw() {
 		glEigenVertex3d(this->offset);
 		glEnd();
 	
-		glEigenTranslated(this->offset);
-		if(trans.norm() > 0.01) glEigenTranslated(this->trans);
+		if(trans.norm() > 0.01)
+			glEigenTranslated(this->trans);
+		else glEigenTranslated(this->offset);
 		glutSolidSphere(2, 4, 4);
 		
 		glEigenRotate3d(this->rot);

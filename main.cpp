@@ -163,7 +163,7 @@ void display() {
 
 	//glRotatef(45, -1, 0, 0);
 	glPushMatrix();
-	DrawPlane();
+	//DrawPlane();
 	DrawGridPlane();
 	for (auto bvh: bvhs)
 		bvh->draw();
